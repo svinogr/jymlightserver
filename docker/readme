@@ -8,3 +8,10 @@
     spring.datasource.password=123456
     spring.datasource.driver-class-name=org.postgresql.Driver
     spring.jpa.show-sql: true
+
+5 при подключении новой базы из бекапа сбивается id. для исправления нужно ввести
+SELECT setval('"cycles_id_seq"', (SELECT MAX(id) FROM cycles)+1);
+SELECT setval('"exercise_description_id_seq"', (SELECT MAX(id) FROM cycles)+1);
+SELECT setval('"exercises_id_seq"', (SELECT MAX(id) FROM cycles)+1);
+SELECT setval('"sets_id_seq"', (SELECT MAX(id) FROM cycles)+1);
+SELECT setval('"workouts_id_seq"', (SELECT MAX(id) FROM cycles)+1);

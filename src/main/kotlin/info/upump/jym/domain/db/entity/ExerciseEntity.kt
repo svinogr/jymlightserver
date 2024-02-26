@@ -14,7 +14,7 @@ data class ExerciseEntity(
 
         var description_id: Long? = 0,
 
-        var type_exercise: String? = "",
+        var type_exercise: String = "",
 
         var default_type: Int = 0,
 

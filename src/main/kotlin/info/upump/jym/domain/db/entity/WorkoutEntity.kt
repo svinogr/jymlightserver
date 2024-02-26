@@ -21,7 +21,7 @@ data class WorkoutEntity(
 
         var template: Int = 0,
 
-        var day: String? = "",
+        var day: String = "",
 
         var start_date: String = "",
 

@@ -12,7 +12,7 @@ services:
     #    tmpfs:
     #      size: 134217728 # 128*2^20 bytes = 128Mb
     volumes:
-      - E:\docker volumes\postgres:/var/lib/postgresql/data
+      - E:\docker volumes\postgres2:/var/lib/postgresql/data
     ports:
       - "5433:5432"
     environment:

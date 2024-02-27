@@ -9,7 +9,7 @@ import jakarta.persistence.Id
 @Entity(name = "cycles")
 data class CycleEntity(
         @Id
-        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        @GeneratedValue(strategy = GenerationType.SEQUENCE)
         val id: Long,
 
         var title: String = "",
@@ -24,5 +24,7 @@ data class CycleEntity(
 
         var finish_date: String = "",
 
-        var default_img: String? = ""
+        var default_img: String? = "",
+
+        var parentUser: Long = 0L
 )

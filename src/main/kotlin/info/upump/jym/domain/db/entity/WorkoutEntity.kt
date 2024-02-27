@@ -8,7 +8,7 @@ import jakarta.persistence.Id
 @Entity(name = "workouts")
 data class WorkoutEntity(
         @Id
-        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        @GeneratedValue(strategy = GenerationType.SEQUENCE)
         var id: Long = 0,
 
         var title: String = "",

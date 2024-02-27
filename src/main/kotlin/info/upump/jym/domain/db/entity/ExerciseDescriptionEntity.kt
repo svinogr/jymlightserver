@@ -8,7 +8,7 @@ import jakarta.persistence.Id
 @Entity(name = "exercise_description")
 data class ExerciseDescriptionEntity(
         @Id
-        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        @GeneratedValue(strategy = GenerationType.SEQUENCE)
         var id: Long=0,
         var default_img: String? = "",
 

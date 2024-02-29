@@ -1,1 +1,42 @@
+localhost:8080/api/cycle/user/1
+###
+
 localhost:8080/api/cycle/1
+
+###
+POST localhost:8080/api/cycle/0
+Content-Type: application/json
+
+{
+  "workoutList": [],
+  "isDefaultType": true,
+  "image": "",
+  "imageDefault": "plint14",
+  "id": 0,
+  "title": "Плинтович (Фаза 1)",
+  "startDate": "2017-12-31T21:00:00.000+00:00",
+  "finishDate": "2018-02-13T21:00:00.000+00:00",
+  "comment": "Тренировки следует проводить три раза в неделю по схеме Пн, Ср, Пт или Вт, Чт, Сб.\nПервая фаза состоит только из одного тренировочного дня, который повторяется все три тренировки в неделю. Все три тренировки в неделю на первой фазе будут с одним и тем же ",
+  "parentId": 0,
+  "startStringFormatDate": "2018-01-01",
+  "finishStringFormatDate": "2018-02-14"
+}
+
+###
+POST localhost:8080/api/cycle/115
+Content-Type: application/json
+
+{
+  "workoutList": [],
+  "isDefaultType": true,
+  "image": "",
+  "imageDefault": "plint12",
+  "id": 1215,
+  "title": "Плинтович (Фаза 1)",
+  "startDate": "2017-12-31T21:00:00.000+00:00",
+  "finishDate": "2018-02-13T21:00:00.000+00:00",
+  "comment": "Тренировки следует проводить три раза в неделю по схеме Пн, Ср, Пт или Вт, Чт, Сб.\nПервая фаза состоит только из одного тренировочного дня, который повторяется все три тренировки в неделю. Все три тренировки в неделю на первой фазе будут с одним и тем же ",
+  "parentId": 0,
+  "startStringFormatDate": "2018-01-01",
+  "finishStringFormatDate": "2018-02-14"
+}

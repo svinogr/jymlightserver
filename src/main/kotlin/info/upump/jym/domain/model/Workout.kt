@@ -10,7 +10,7 @@ data class Workout(
         var isDefaultType: Boolean = false,
         var isTemplate: Boolean = false,
         var day: String = "MONDAY",
-        var exercises: List<Exercise> = ArrayList(),
+        var exercises: MutableList<Exercise> = ArrayList(),
         var id: Long = 0,
         var title: String = "",
         var startDate: Date = Date(),

@@ -4,7 +4,14 @@ localhost:8080/api/cycle/user/1
 localhost:8080/api/cycle/1
 
 ###
-POST localhost:8080/api/cycle/0
+localhost:8080/api/cycle/full/1
+###
+localhost:8080/api/cycle/templates
+###
+localhost:8080/api/cycle/templates/1
+
+###
+POST localhost:8080/api/cycle
 Content-Type: application/json
 
 {
@@ -23,7 +30,7 @@ Content-Type: application/json
 }
 
 ###
-POST localhost:8080/api/cycle/115
+POST localhost:8080/api/cycle
 Content-Type: application/json
 
 {
@@ -40,3 +47,7 @@ Content-Type: application/json
   "startStringFormatDate": "2018-01-01",
   "finishStringFormatDate": "2018-02-14"
 }
+###
+
+DELETE localhost:8080/api/cycle/152
+Content-Type: application/json

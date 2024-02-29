@@ -16,18 +16,27 @@ class CycleUserController {
 
     @GetMapping("all/{userId}")
     fun getListCycleByOwnUser(@PathVariable userId: Long): List<Cycle> {
+        return cycleService.getAllCycleByOwnerUserId(userId)
+    }
 
-        return cycleService.getAllCycleByOwnUserId(userId)
+    @GetMapping("full/{cycleId}")
+    fun getFullCycleById(@PathVariable cycleId: Long): Cycle {
+        return cycleService.getFullAllCycleById(cycleId)
     }
 
     @GetMapping("{cycleId}")
     fun getCycleById(@PathVariable cycleId: Long): Cycle {
-        return cycleService.getCycleById(cycleId)
+        return cycleService.getById(cycleId)
     }
 
-    @PostMapping("{cycleId}")
-    fun changeCycleById(@RequestBody cycle: Cycle): Cycle {
+    @PostMapping()
+    fun save(@RequestBody cycle: Cycle): Cycle {
         return cycleService.save(cycle)
+    }
+
+    @DeleteMapping("{cycleId}")
+    fun delete(@PathVariable cycleId: Long) {
+        return cycleService.delete(cycleId)
     }
 
 

@@ -42,7 +42,7 @@ class PingController {
         ex.exerciseDescription = exd
         ex.setsList = mutableListOf(se)
         work.exercises = mutableListOf(ex)
-        findAll.workoutList = listOf(work)
+        findAll.workoutList = mutableListOf(work)
 
         return findAll
     }

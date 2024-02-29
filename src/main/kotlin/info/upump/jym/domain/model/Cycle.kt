@@ -6,7 +6,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 data class Cycle(
-        var workoutList: List<Workout> = ArrayList(),
+        var workoutList: MutableList<Workout> = ArrayList(),
         var isDefaultType: Boolean = false,
         var image: String = "",
         var imageDefault: String = "",
@@ -36,7 +36,7 @@ data class Cycle(
     companion object {
         fun mapFromDbEntity(entity: CycleEntity): Cycle {
             val cycle = Cycle(
-                    workoutList = listOf(),
+                    workoutList = mutableListOf(),
                     isDefaultType = entity.default_type == 1,
 
                     imageDefault = entity.default_img ?: ""

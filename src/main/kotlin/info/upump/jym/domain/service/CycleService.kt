@@ -3,53 +3,87 @@ package info.upump.jym.domain.service
 import info.upump.jym.domain.db.entity.CycleEntity
 import info.upump.jym.domain.db.repo.CycleRepo
 import info.upump.jym.domain.exception.NotHaveObjectInDB
-import info.upump.jym.domain.exception.NotOwnUserException
 import info.upump.jym.domain.model.Cycle
+import info.upump.jym.domain.service.interfaces.ServiceCycleInterface
+import jakarta.transaction.Transactional
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
 @Service
-class CycleService {
+class CycleService : ServiceCycleInterface {
     @Autowired
-    lateinit var cycleRepo: CycleRepo
+    private lateinit var cycleRepo: CycleRepo
 
-    fun getAllTemplateCycle(): List<Cycle> {
-        val allEn = cycleRepo.getAllTemplate()
-        val allC = allEn.map { Cycle.mapFromDbEntity(it) }
+    @Autowired
+    private lateinit var workoutService: WorkoutService
 
-        return allC
-    }
+    override fun getAllCycleByOwnerUserId(id: Long): List<Cycle> {
+        isUserOwnerWith(id)
 
-    fun getAllCycleByOwnUserId(userId: Long): List<Cycle> {
+        val userCycleEn = cycleRepo.findAllByUserId(id)
 
-        // проверка на соответсвие userId залогиненому user если нет то
-        // NotOwnUserException
-
-        val userCycleEn = cycleRepo.findAllByUserId(userId)
-        //   throw NotOwnUserException()
         return userCycleEn.map { Cycle.mapFromDbEntity(it) }
     }
 
-    fun getCycleById(cycleId: Long): Cycle {
-        // проверка на соответсвие принадлежности cycled залогиненому user если нет то
-        // NotOwnUserException
-        return cycleRepo.findById(cycleId).map { Cycle.mapFromDbEntity(it) }.orElse(Cycle())
+    @Transactional
+    fun getFullAllCycleById(id: Long): Cycle {
+        val cycle = Cycle.mapFromDbEntity(cycleRepo.findById(id).orElse(CycleEntity(id = 0)))
+
+        isUserOwnerWith(cycle.parentId)
+
+        val listWorkout = workoutService.findFullByParentId(cycle.id)
+
+        cycle.workoutList.addAll(listWorkout)
+
+        return cycle
     }
 
-    fun save(cycle: Cycle): Cycle {
-        return if (cycle.id == 0L) {
-            Cycle.mapFromDbEntity(cycleRepo.save(Cycle.mapToEntity(cycle)))
+    override fun getById(id: Long): Cycle {
+        val cycle = cycleRepo.findById(id).map { Cycle.mapFromDbEntity(it) }.orElse(Cycle())
+        isUserOwnerWith(cycle.id)
+
+        return cycle
+    }
+
+    override fun save(model: Cycle): Cycle {
+        return if (model.id == 0L) {
+            Cycle.mapFromDbEntity(cycleRepo.save(Cycle.mapToEntity(model)))
         } else {
-            change(cycle)
+            change(model)
         }
     }
 
     private fun change(cycle: Cycle): Cycle {
-        // проверка на соответсвие принадлежности cycled залогиненому user если нет то
-        // NotOwnUserException
-        val prep = cycleRepo.findById(cycle.id)
-        if (prep.isEmpty) throw NotHaveObjectInDB()
+        isIdInDB(cycle.id)
 
-        return Cycle.mapFromDbEntity(cycleRepo.save(Cycle.mapToEntity(cycle)))
+        val cycleChange = Cycle.mapFromDbEntity(cycleRepo.save(Cycle.mapToEntity(cycle)))
+
+        isUserOwnerWith(cycleChange.id)
+
+        return cycleChange
+    }
+
+    @Transactional
+    override fun delete(id: Long) {
+        isIdInDB(id)
+
+        val cycleGet = cycleRepo.findById(id)
+
+        isUserOwnerWith(cycleGet.get().id)
+
+        return cycleRepo.delete(CycleEntity(id = id))
+    }
+
+    override fun isIdInDB(id: Long) {
+        val prep = cycleRepo.findById(id)
+        if (prep.isEmpty) throw NotHaveObjectInDB()
+    }
+
+    override fun isUserOwnerWith(id: Long) {
+        //TODO  если id = 0  то подумать как обыграть это
+        // TODO
+        // проверка на соответсвие userId залогиненому user если нет то
+        // NotOwnUserException
+        //   throw NotOwnUserException()
     }
 }

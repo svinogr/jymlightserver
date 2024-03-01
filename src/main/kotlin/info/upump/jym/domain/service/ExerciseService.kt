@@ -19,12 +19,12 @@ class ExerciseService : ExerciseServiceInterface {
     private lateinit var setsService: SetsService
 
     @Transactional
-    fun findFullByParentId(id: Long): List<Exercise> {
+    fun getAllFullByParentId(id: Long): List<Exercise> {
         val listExercise = exerciseRepo.findByParentId(id).map { Exercise.mapFromDbEntity(it) }
 
         listExercise.forEach { ex ->
             val exD = exerciseDescriptionService.getById(ex.descriptionId)
-            val listSets = setsService.getByParentId(ex.id)
+            val listSets = setsService.getAllByParentId(ex.id)
 
             ex.exerciseDescription = exD
             ex.setsList.addAll(listSets)

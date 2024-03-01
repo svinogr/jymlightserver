@@ -2,10 +2,10 @@ package info.upump.jym.domain.service.interfaces
 
 import info.upump.jym.domain.exception.NotHaveObjectInDB
 
- interface CheckableInterface {
+ interface CheckableInterface<T> {
 
 
-    fun isIdInDB(id: Long)
+    fun isIdInDB(id: Long): T
 
-     fun isUserOwnerWith(id: Long)
+     fun isUserOwnerOf(id: Long)
 }

@@ -1,6 +1,7 @@
 package info.upump.jym.domain.service
 
 import info.upump.jym.domain.db.repo.WorkoutRepo
+import info.upump.jym.domain.exception.NotHaveObjectInDB
 import info.upump.jym.domain.model.Workout
 import info.upump.jym.domain.service.interfaces.WorkoutServiceInterface
 import jakarta.transaction.Transactional
@@ -16,14 +17,69 @@ class WorkoutService : WorkoutServiceInterface {
     private lateinit var exerciseService: ExerciseService
 
     @Transactional
-    override fun findFullByParentId(id: Long): List<Workout> {
+    override fun getAllFullByParentId(id: Long): List<Workout> {
         val listWorkout = workoutRepo.findByParentId(id).map { Workout.mapFromDbEntity(it) }
-        listWorkout.forEach{w ->
-            val listExercise = exerciseService.findFullByParentId(w.id)
+        listWorkout.forEach { w ->
+            val listExercise = exerciseService.getAllFullByParentId(w.id)
             w.exercises.addAll(listExercise)
         }
 
         return listWorkout
     }
 
+    fun getAllByParentId(parentId: Long): List<Workout> {
+        return workoutRepo.findByParentId(parentId).map { Workout.mapFromDbEntity(it) }
+    }
+
+    fun getFullById(workoutId: Long): Workout {
+        val workout = Workout.mapFromDbEntity(workoutRepo.findById(workoutId).get())
+        val listExercise = exerciseService.getAllFullByParentId(workout.id)
+        workout.exercises.addAll(listExercise)
+
+        return workout
+    }
+
+    @Transactional
+    fun save(workout: Workout): Workout {
+        return if (workout.id == 0L) {
+            Workout.mapFromDbEntity(workoutRepo.save(Workout.mapToEntity(workout)))
+        } else {
+            change(workout)
+        }
+    }
+
+    private fun change(workout: Workout): Workout {
+        isIdInDB(workout.id)
+
+        isUserOwnerOf(workout.id)
+
+        val workoutChange = Workout.mapFromDbEntity(workoutRepo.save(Workout.mapToEntity(workout)))
+
+        return workoutChange
+    }
+
+    @Transactional
+    fun delete(workoutId: Long) {
+        isIdInDB(workoutId)
+
+        isUserOwnerOf(workoutId)
+
+        workoutRepo.deleteById(workoutId)
+    }
+
+    override fun isIdInDB(id: Long): Workout {
+        val prep = workoutRepo.findById(id)
+
+        if (prep.isEmpty) throw NotHaveObjectInDB()
+
+        return Workout.mapFromDbEntity(prep.get())
+    }
+
+    override fun isUserOwnerOf(id: Long) {
+        //TODO  если id = 0  то подумать как обыграть это
+        // TODO
+        // проверка на соответсвие userId залогиненому user если нет то
+        // NotOwnUserException
+        //   throw NotOwnUserException()
+    }
 }

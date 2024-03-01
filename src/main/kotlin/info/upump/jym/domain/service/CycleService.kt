@@ -18,7 +18,7 @@ class CycleService : ServiceCycleInterface {
     private lateinit var workoutService: WorkoutService
 
     override fun getAllCycleByOwnerUserId(id: Long): List<Cycle> {
-        isUserOwnerWith(id)
+        isUserOwnerOf(id)
 
         val userCycleEn = cycleRepo.findAllByUserId(id)
 
@@ -29,9 +29,9 @@ class CycleService : ServiceCycleInterface {
     fun getFullAllCycleById(id: Long): Cycle {
         val cycle = Cycle.mapFromDbEntity(cycleRepo.findById(id).orElse(CycleEntity(id = 0)))
 
-        isUserOwnerWith(cycle.parentId)
+        isUserOwnerOf(cycle.parentId)
 
-        val listWorkout = workoutService.findFullByParentId(cycle.id)
+        val listWorkout = workoutService.getAllFullByParentId(cycle.id)
 
         cycle.workoutList.addAll(listWorkout)
 
@@ -40,11 +40,12 @@ class CycleService : ServiceCycleInterface {
 
     override fun getById(id: Long): Cycle {
         val cycle = cycleRepo.findById(id).map { Cycle.mapFromDbEntity(it) }.orElse(Cycle())
-        isUserOwnerWith(cycle.id)
+        isUserOwnerOf(cycle.id)
 
         return cycle
     }
 
+    @Transactional
     override fun save(model: Cycle): Cycle {
         return if (model.id == 0L) {
             Cycle.mapFromDbEntity(cycleRepo.save(Cycle.mapToEntity(model)))
@@ -56,30 +57,30 @@ class CycleService : ServiceCycleInterface {
     private fun change(cycle: Cycle): Cycle {
         isIdInDB(cycle.id)
 
-        val cycleChange = Cycle.mapFromDbEntity(cycleRepo.save(Cycle.mapToEntity(cycle)))
+        isUserOwnerOf(cycle.id)
 
-        isUserOwnerWith(cycleChange.id)
+        val cycleChange = Cycle.mapFromDbEntity(cycleRepo.save(Cycle.mapToEntity(cycle)))
 
         return cycleChange
     }
 
     @Transactional
     override fun delete(id: Long) {
-        isIdInDB(id)
+        val cycle = isIdInDB(id)
 
-        val cycleGet = cycleRepo.findById(id)
+        isUserOwnerOf(cycle.id)
 
-        isUserOwnerWith(cycleGet.get().id)
-
-        return cycleRepo.delete(CycleEntity(id = id))
+        cycleRepo.deleteById(id)
     }
 
-    override fun isIdInDB(id: Long) {
+    override fun isIdInDB(id: Long): Cycle {
         val prep = cycleRepo.findById(id)
         if (prep.isEmpty) throw NotHaveObjectInDB()
+
+        return Cycle.mapFromDbEntity(prep.get())
     }
 
-    override fun isUserOwnerWith(id: Long) {
+    override fun isUserOwnerOf(id: Long) {
         //TODO  если id = 0  то подумать как обыграть это
         // TODO
         // проверка на соответсвие userId залогиненому user если нет то

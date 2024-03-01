@@ -1,6 +1,7 @@
 package info.upump.jymlight.models.entity
 
 import info.upump.jym.domain.db.entity.ExerciseDescriptionEntity
+import info.upump.jym.domain.db.entity.SetsEntity
 
 class ExerciseDescription(
     var id: Long = 0,
@@ -47,6 +48,16 @@ class ExerciseDescription(
 
             return exerciseDescription
         }
-    }
 
+        fun mapToEntity(entity: ExerciseDescription): ExerciseDescriptionEntity {
+            val exerciseDescriptionEntity = ExerciseDescriptionEntity().apply {
+                id = entity.id
+                title = entity.title
+                default_img = entity.defaultImg
+                img = entity.img
+            }
+
+            return exerciseDescriptionEntity
+        }
+    }
 }

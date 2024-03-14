@@ -1,12 +1,15 @@
 package info.upump.jym.domain.controllers
 
+import com.google.gson.JsonObject
 import info.upump.jym.domain.exception.NotHaveObjectInDB
 import info.upump.jym.domain.exception.NotOwnUserException
 import info.upump.jym.domain.model.Cycle
 import info.upump.jym.domain.service.CycleService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import java.net.URI
 
 @RestController
 @RequestMapping("/api/cycle")
@@ -15,28 +18,40 @@ class CycleUserController {
     lateinit var cycleService: CycleService
 
     @GetMapping("all/{userId}")
-    fun getListCycleByOwnUser(@PathVariable userId: Long): List<Cycle> {
-        return cycleService.getAllCycleByOwnerUserId(userId)
+    fun getListCycleByOwnUser(@PathVariable userId: Long): ResponseEntity<List<Cycle>> {
+        return ResponseEntity.ok().body(cycleService.getAllCycleByOwnerUserId(userId))
     }
 
     @GetMapping("full/{cycleId}")
-    fun getFullCycleById(@PathVariable cycleId: Long): Cycle {
-        return cycleService.getFullAllCycleById(cycleId)
+    fun getFullCycleById(@PathVariable cycleId: Long): ResponseEntity<Cycle> {
+        return ResponseEntity.ok().body(cycleService.getFullAllCycleById(cycleId))
     }
 
     @GetMapping("{cycleId}")
-    fun getCycleById(@PathVariable cycleId: Long): Cycle {
-        return cycleService.getById(cycleId)
+    fun getCycleById(@PathVariable cycleId: Long): ResponseEntity<Cycle> {
+        return ResponseEntity.ok().body(cycleService.getById(cycleId))
     }
 
     @PostMapping()
-    fun save(@RequestBody cycle: Cycle): Cycle {
-        return cycleService.save(cycle)
+    fun save(@RequestBody cycle: Cycle): ResponseEntity<Void> {
+        val cycleDb = cycleService.save(cycle)
+
+        return ResponseEntity.created(URI("/api/cycle/${cycleDb.id}")).build()
     }
 
+    @PutMapping()
+    fun update(@RequestBody cycle: Cycle): ResponseEntity<Void> {
+        cycleService.save(cycle)
+
+        return ResponseEntity.noContent().build()
+    }
+
+
     @DeleteMapping("{cycleId}")
-    fun delete(@PathVariable cycleId: Long) {
-        return cycleService.delete(cycleId)
+    fun delete(@PathVariable cycleId: Long): ResponseEntity<Void> {
+        cycleService.delete(cycleId)
+
+        return ResponseEntity.ok().build()
     }
 
 
@@ -48,7 +63,10 @@ class CycleUserController {
 
     // хендлер для обработки  отсутсвия обьекта в базе
     @ExceptionHandler(NotHaveObjectInDB::class)
-    @ResponseStatus(HttpStatus.NOT_FOUND, reason = "Db haven't this object")
-    fun responseHandlerNotHaveObjectInDB(e: NotHaveObjectInDB) {
+    fun responseHandlerNotHaveObjectInDB(e: NotHaveObjectInDB): ResponseEntity<String> {
+        val responseJSON = JsonObject()
+        responseJSON.addProperty("message", e.message)
+
+        return ResponseEntity<String>(responseJSON.toString(), HttpStatus.NOT_FOUND)
     }
 }

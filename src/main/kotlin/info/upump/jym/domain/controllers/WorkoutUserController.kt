@@ -6,7 +6,9 @@ import info.upump.jym.domain.model.Workout
 import info.upump.jym.domain.service.WorkoutService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import java.net.URI
 
 @RestController
 @RequestMapping("/api/workout")
@@ -15,23 +17,27 @@ class WorkoutUserController {
     lateinit var workoutService: WorkoutService
 
     @GetMapping("all/{parentId}")
-    fun getListWorkoutByParentId(@PathVariable parentId: Long): List<Workout> {
-        return workoutService.getAllByParentId(parentId)
+    fun getListWorkoutByParentId(@PathVariable parentId: Long): ResponseEntity<List<Workout>> {
+        return ResponseEntity.ok().body(workoutService.getAllByParentId(parentId))
     }
 
     @GetMapping("full/{workoutId}")
-    fun getFullWorkoutById(@PathVariable workoutId: Long): Workout {
-        return workoutService.getFullById(workoutId)
+    fun getFullWorkoutById(@PathVariable workoutId: Long): ResponseEntity<Workout?> {
+        return ResponseEntity.ok().body(workoutService.getFullById(workoutId))
     }
 
     @PostMapping()
-    fun save(@RequestBody workout: Workout): Workout {
-        return workoutService.save(workout)
+    fun save(@RequestBody workout: Workout): ResponseEntity<Workout> {
+        val workoutDb = workoutService.save(workout)
+
+        return ResponseEntity.created(URI("api/workout/${workoutDb.id}")).body(workoutDb)
     }
 
     @DeleteMapping("{workoutId}")
-    fun delete(@PathVariable workoutId: Long) {
-        return workoutService.delete(workoutId)
+    fun delete(@PathVariable workoutId: Long): ResponseEntity<String> {
+        workoutService.delete(workoutId)
+
+        return ResponseEntity.ok().body("resource deleted")
     }
 
 

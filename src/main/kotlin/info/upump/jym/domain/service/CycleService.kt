@@ -19,7 +19,6 @@ class CycleService : ServiceCycleInterface {
 
     override fun getAllCycleByOwnerUserId(id: Long): List<Cycle> {
         isUserOwnerOf(id)
-
         val userCycleEn = cycleRepo.findAllByUserId(id)
 
         return userCycleEn.map { Cycle.mapFromDbEntity(it) }
@@ -47,6 +46,7 @@ class CycleService : ServiceCycleInterface {
 
     @Transactional
     override fun save(model: Cycle): Cycle {
+        isUserOwnerOf(model.id)  // проверить и убрать
         return if (model.id == 0L) {
             Cycle.mapFromDbEntity(cycleRepo.save(Cycle.mapToEntity(model)))
         } else {
@@ -54,23 +54,20 @@ class CycleService : ServiceCycleInterface {
         }
     }
 
-    private fun change(cycle: Cycle): Cycle {
-        isIdInDB(cycle.id)
+    fun change(cycle: Cycle): Cycle {
+        val cycleDb = cycleRepo.findById(cycle.id)
+        cycleDb.orElseThrow { NotHaveObjectInDB() }.title = cycle.title
 
-        isUserOwnerOf(cycle.id)
-
-        val cycleChange = Cycle.mapFromDbEntity(cycleRepo.save(Cycle.mapToEntity(cycle)))
-
-        return cycleChange
+        return cycle
     }
 
     @Transactional
     override fun delete(id: Long) {
-        val cycle = isIdInDB(id)
+        val cycleDb = cycleRepo.findById(id)
+        cycleDb.ifPresentOrElse({cycleRepo.deleteById(id)}, {throw NotHaveObjectInDB()})
 
-        isUserOwnerOf(cycle.id)
+      //  isUserOwnerOf(cycle.id)
 
-        cycleRepo.deleteById(id)
     }
 
     override fun isIdInDB(id: Long): Cycle {

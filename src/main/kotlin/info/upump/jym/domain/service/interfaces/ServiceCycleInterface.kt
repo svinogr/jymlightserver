@@ -7,6 +7,5 @@ interface ServiceCycleInterface : CheckableInterface<Cycle> {
     fun getById(id: Long): Cycle
     fun save(model: Cycle): Cycle
     fun delete(id: Long)
-
     fun getAllCycleByOwnerUserId(id: Long): List<Cycle>
 }

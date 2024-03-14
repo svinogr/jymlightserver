@@ -14,10 +14,11 @@ fun main(args: Array<String>) {
 	runApplication<JymApplication>(*args)
 }
 
+/*
 @Bean
 fun init(storageService: StorageService): CommandLineRunner? {
 	return CommandLineRunner { args: Array<String?>? ->
 		print("init__________")
 		storageService.init()
 	}
-}
+}*/

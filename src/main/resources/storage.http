@@ -1,0 +1,7 @@
+### download image
+GET localhost:8080/api/image/babock.jpg
+
+
+
+### store image
+http://localhost:8080/api/image/uk3.jpg

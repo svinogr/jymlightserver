@@ -5,6 +5,10 @@ GET localhost:8080/api/cycle/1
 ###  все по юзеру
 GET localhost:8080/api/cycle/all/0
 
+
+###  все по юзеру 1
+GET localhost:8080/api/cycle/all/1
+
 ### все ПОЛНЫЕ по юзеру
 GET localhost:8080/api/cycle/full/1
 

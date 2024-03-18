@@ -18,7 +18,7 @@ class WorkoutService : WorkoutServiceInterface {
 
     @Transactional
     override fun getAllFullByParentId(id: Long): List<Workout> {
-        val listWorkout = workoutRepo.findByParentId(id).map { Workout.mapFromDbEntity(it) }
+        val listWorkout = workoutRepo.findByParentId(id).orElse(listOf()).map { Workout.mapFromDbEntity(it) }
         listWorkout.forEach { w ->
             val listExercise = exerciseService.getAllFullByParentId(w.id)
             w.exercises.addAll(listExercise)
@@ -28,7 +28,7 @@ class WorkoutService : WorkoutServiceInterface {
     }
 
     fun getAllByParentId(parentId: Long): List<Workout> {
-        return workoutRepo.findByParentId(parentId).map { Workout.mapFromDbEntity(it) }
+        return workoutRepo.findByParentId(parentId).orElse(listOf()).map { Workout.mapFromDbEntity(it) }
     }
 
     fun getFullById(workoutId: Long): Workout {

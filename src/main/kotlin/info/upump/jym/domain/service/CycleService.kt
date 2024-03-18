@@ -19,7 +19,7 @@ class CycleService : ServiceCycleInterface {
 
     override fun getAllCycleByOwnerUserId(id: Long): List<Cycle> {
         isUserOwnerOf(id)
-        val userCycleEn = cycleRepo.findAllByUserId(id)
+        val userCycleEn = cycleRepo.findAllByUserId(id).orElse(listOf())
 
         return userCycleEn.map { Cycle.mapFromDbEntity(it) }
     }

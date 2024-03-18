@@ -14,7 +14,7 @@ class SetsService : SetsServiceInterface {
     @Autowired
     private lateinit var setsRepo: SetsRepo
     override fun getAllByParentId(id: Long): List<Sets> {
-        return setsRepo.findParentId(id).map { Sets.mapFromDbEntity(it) }
+        return setsRepo.findParentId(id).orElse(listOf()).map { Sets.mapFromDbEntity(it) }
     }
 
     fun getById(setId: Long): Sets {

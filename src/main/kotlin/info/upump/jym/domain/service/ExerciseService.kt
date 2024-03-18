@@ -20,7 +20,7 @@ class ExerciseService : ExerciseServiceInterface {
 
     @Transactional
     fun getAllFullByParentId(id: Long): List<Exercise> {
-        val listExercise = exerciseRepo.findByParentId(id).map { Exercise.mapFromDbEntity(it) }
+        val listExercise = exerciseRepo.findByParentId(id).orElse(listOf()).map { Exercise.mapFromDbEntity(it) }
 
         listExercise.forEach { ex ->
             val exD = exerciseDescriptionService.getById(ex.descriptionId)

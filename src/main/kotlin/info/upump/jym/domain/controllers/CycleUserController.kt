@@ -5,10 +5,15 @@ import info.upump.jym.domain.exception.NotHaveObjectInDB
 import info.upump.jym.domain.exception.NotOwnUserException
 import info.upump.jym.domain.model.Cycle
 import info.upump.jym.domain.service.CycleService
+import info.upump.jym.domain.service.StorageService
+import jakarta.servlet.http.HttpServletRequest
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpHeaders
+import org.springframework.http.HttpRequest
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.multipart.MultipartFile
 import java.net.URI
 
 @RestController
@@ -16,6 +21,10 @@ import java.net.URI
 class CycleUserController {
     @Autowired
     lateinit var cycleService: CycleService
+
+
+    @Autowired
+    lateinit var storageService: StorageService
 
     @GetMapping("all/{userId}")
     fun getListCycleByOwnUser(@PathVariable userId: Long): ResponseEntity<List<Cycle>> {
@@ -32,10 +41,14 @@ class CycleUserController {
         return ResponseEntity.ok().body(cycleService.getById(cycleId))
     }
 
+    // названия file и переменная cycle должны совпадать с отправлеными данными в клиенте
     @PostMapping()
-    fun save(@RequestBody cycle: Cycle): ResponseEntity<Void> {
+    fun save(@RequestPart("file") file: MultipartFile, @RequestPart cycle: Cycle, h: HttpServletRequest): ResponseEntity<Void> {
+        println(file.name)
+        println(h.getHeader("Content-Type"))
+        println(cycle.title)
+        storageService.storage(file)
         val cycleDb = cycleService.save(cycle)
-
         return ResponseEntity.created(URI("/api/cycle/${cycleDb.id}")).build()
     }
 

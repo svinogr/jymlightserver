@@ -131,7 +131,7 @@ data class Cycle(
         }
     }
 
-    val startStringFormatDate: String
+    private val startStringFormatDate: String
         get() {
             return BaseModel.formatDateToString(startDate)
         }
@@ -140,7 +140,7 @@ data class Cycle(
         startDate = BaseModel.formatStringToDate(stringDate)
     }
 
-    val finishStringFormatDate: String
+    private val finishStringFormatDate: String
         get() {
             return BaseModel.formatDateToString(finishDate)
         }

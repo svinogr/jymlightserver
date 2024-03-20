@@ -34,6 +34,7 @@ class ImageController {
     @PostMapping(consumes = ["multipart/form-data"])
     fun uploadImage(@RequestParam("file") file: MultipartFile) {
         println("upload ${file.bytes.size}")
+        println("upload ${file.name}")
         storageService.storage(file)
     }
 

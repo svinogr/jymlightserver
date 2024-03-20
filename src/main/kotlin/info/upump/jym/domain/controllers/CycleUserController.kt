@@ -5,6 +5,7 @@ import info.upump.jym.domain.exception.NotHaveObjectInDB
 import info.upump.jym.domain.exception.NotOwnUserException
 import info.upump.jym.domain.model.Cycle
 import info.upump.jym.domain.service.CycleService
+import info.upump.jym.domain.service.DEFAULT_NAME_IMAGE
 import info.upump.jym.domain.service.StorageService
 import jakarta.servlet.http.HttpServletRequest
 import org.springframework.beans.factory.annotation.Autowired
@@ -44,12 +45,19 @@ class CycleUserController {
     // названия file и переменная cycle должны совпадать с отправлеными данными в клиенте
     @PostMapping()
     fun save(@RequestPart("file") file: MultipartFile, @RequestPart cycle: Cycle, h: HttpServletRequest): ResponseEntity<Void> {
-        println(file.name)
-        println(h.getHeader("Content-Type"))
-        println(cycle.title)
-        storageService.storage(file)
-        val cycleDb = cycleService.save(cycle)
-        return ResponseEntity.created(URI("/api/cycle/${cycleDb.id}")).build()
+        var newId = 0L
+        println("upload ${file.bytes.size}")
+        println("upload ${file.originalFilename}")
+        if (file.isEmpty){
+            cycle.imageDefault = DEFAULT_NAME_IMAGE
+            newId = cycleService.save(cycle).id
+        } else{
+            val nameImage = storageService.storage(file)
+            cycle.image = nameImage
+            newId = cycleService.save(cycle).id
+        }
+
+        return ResponseEntity.created(URI("/api/cycle/${newId}")).build()
     }
 
     @PutMapping()

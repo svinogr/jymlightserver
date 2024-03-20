@@ -13,6 +13,9 @@ import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
 import java.nio.file.StandardCopyOption
+import java.util.*
+
+const val DEFAULT_NAME_IMAGE = "drew"
 
 @Service
 class StorageService : StorageServiceInterface {
@@ -27,25 +30,32 @@ class StorageService : StorageServiceInterface {
         }
     }
 
-    override fun storage(file: MultipartFile) {
+    override fun storage(file: MultipartFile): String {
         if (!Files.exists(UPLOAD_PATH)) init()
 
-        try {
-
-            if (file.isEmpty) {
-                throw IOException()
-            }
-
-            val destinationFile = UPLOAD_PATH.resolve(file.originalFilename!!).normalize().toAbsolutePath()
+        return try {
+            val fileName = generateUniqFileName(file.originalFilename!!.substringBefore("."), file.originalFilename!!.substringAfterLast("."))
+            val destinationFile = UPLOAD_PATH.resolve(fileName).normalize().toAbsolutePath()
 
             file.inputStream.use {
                 Files.copy(it, destinationFile, StandardCopyOption.REPLACE_EXISTING)
                 print(destinationFile)
             }
 
+            fileName
+
         } catch (e: IOException) {
-            print("not storage")
+            DEFAULT_NAME_IMAGE
         }
+    }
+
+    private fun generateUniqFileName(name: String, ext: String): String {
+        print(name)
+        print(ext)
+        val longMiles = System.currentTimeMillis()
+        val dateTime = Date().toGMTString()
+        val rndChar = Random()
+        return (name + longMiles + dateTime + rndChar.nextInt(10000)).replace(regex = Regex("\\W"), replacement =  "").replace("_", "") + "." + ext
     }
 
     override fun load(fileName: String): Path {
@@ -59,8 +69,8 @@ class StorageService : StorageServiceInterface {
 
         if (resource.exists() && resource.isReadable) {
             return resource
-        } else{
-           throw NotHaveResource(message = "image not found")
+        } else {
+            throw NotHaveResource(message = "image not found")
         }
     }
 }

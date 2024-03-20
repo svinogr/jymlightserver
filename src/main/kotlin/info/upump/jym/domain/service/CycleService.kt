@@ -47,11 +47,8 @@ class CycleService : ServiceCycleInterface {
     @Transactional
     override fun save(model: Cycle): Cycle {
         isUserOwnerOf(model.id)  // проверить и убрать
-        return if (model.id == 0L) {
-            Cycle.mapFromDbEntity(cycleRepo.save(Cycle.mapToEntity(model)))
-        } else {
-            change(model)
-        }
+
+        return  Cycle.mapFromDbEntity(cycleRepo.save(Cycle.mapToEntity(model)))
     }
 
     fun change(cycle: Cycle): Cycle {

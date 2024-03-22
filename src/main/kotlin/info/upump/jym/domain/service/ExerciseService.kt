@@ -1,6 +1,7 @@
 package info.upump.jym.domain.service
 
 import info.upump.jym.domain.db.repo.ExerciseRepo
+import info.upump.jym.domain.exception.NotHaveObjectInDB
 import info.upump.jym.domain.service.interfaces.ExerciseServiceInterface
 import info.upump.jymlight.models.entity.Exercise
 import jakarta.transaction.Transactional
@@ -31,5 +32,16 @@ class ExerciseService : ExerciseServiceInterface {
         }
 
         return listExercise
+    }
+
+    @Transactional
+    fun getFullById(id: Long): Exercise {
+        val exercise =  Exercise.mapFromDbEntity(exerciseRepo.findById(id).orElseThrow { NotHaveObjectInDB() })
+        val listsets = setsService.getAllByParentId(exercise.id)
+        val exerciseDescription = exerciseDescriptionService.getById(exercise.descriptionId)
+        exercise.setsList.addAll(listsets)
+        exercise.exerciseDescription = exerciseDescription
+
+        return exercise
     }
 }

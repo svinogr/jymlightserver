@@ -35,6 +35,7 @@ data class Exercise(
             exercise.descriptionId = entity.description_id!!
             exercise.typeMuscle = entity.type_exercise
             exercise.isTemplate = entity.template == 1
+            exercise.comment = entity.comment?: ""
 
             return exercise
         }

@@ -31,6 +31,7 @@ class WorkoutService : WorkoutServiceInterface {
         return workoutRepo.findByParentId(parentId).orElse(listOf()).map { Workout.mapFromDbEntity(it) }
     }
 
+    @Transactional
     fun getFullById(workoutId: Long): Workout {
         val workout = Workout.mapFromDbEntity(workoutRepo.findById(workoutId).get())
         val listExercise = exerciseService.getAllFullByParentId(workout.id)

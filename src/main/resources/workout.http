@@ -1,0 +1,2 @@
+### получить full workout по id
+GET localhost:8080/api/workout/full/1

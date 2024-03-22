@@ -39,7 +39,7 @@ class CycleService : ServiceCycleInterface {
 
     override fun getById(id: Long): Cycle {
         val cycle = cycleRepo.findById(id).map { Cycle.mapFromDbEntity(it) }.orElse(Cycle())
-        isUserOwnerOf(cycle.id)
+       // isUserOwnerOf(cycle.id)
 
         return cycle
     }

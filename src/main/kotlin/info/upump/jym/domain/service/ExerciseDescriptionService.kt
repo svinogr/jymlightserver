@@ -1,5 +1,6 @@
 package info.upump.jym.domain.service
 
+import info.upump.jym.domain.db.entity.ExerciseDescriptionEntity
 import info.upump.jym.domain.db.repo.ExerciseDescriptionRepo
 import info.upump.jym.domain.exception.NotHaveObjectInDB
 import info.upump.jym.domain.service.interfaces.ExerciseDescriptionInterface
@@ -14,7 +15,8 @@ class ExerciseDescriptionService : ExerciseDescriptionInterface {
     @Autowired
     private lateinit var exerciseDescriptionRepo: ExerciseDescriptionRepo
     override fun getById(id: Long): ExerciseDescription {
-        return ExerciseDescription.mapFromDbEntity(exerciseDescriptionRepo.findById(id).get())
+        //return ExerciseDescription.mapFromDbEntity(exerciseDescriptionRepo.findById(id).orElse(ExerciseDescriptionEntity()))
+        return ExerciseDescription.mapFromDbEntity(exerciseDescriptionRepo.findById(id).orElseThrow { NotHaveObjectInDB() })
     }
 
     @Transactional

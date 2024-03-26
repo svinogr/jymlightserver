@@ -9,7 +9,8 @@ import jakarta.persistence.Id
 data class ExerciseEntity(
         @Id
         @GeneratedValue(strategy = GenerationType.SEQUENCE)
-        var id: Long=0,
+        var id: Long = 0,
+
         var comment: String? = "",
 
         var description_id: Long? = 0,

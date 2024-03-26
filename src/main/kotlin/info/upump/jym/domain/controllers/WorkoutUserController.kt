@@ -35,10 +35,18 @@ class WorkoutUserController {
 
     @DeleteMapping("{workoutId}")
     fun delete(@PathVariable workoutId: Long): ResponseEntity<String> {
-        workoutService.delete(workoutId)
+        workoutService.deleteById(workoutId)
 
         return ResponseEntity.ok().body("resource deleted")
     }
+
+    @DeleteMapping("clean/{id}")
+    fun clean(@PathVariable id: Long): ResponseEntity<String>{
+        workoutService.clean(id)
+
+        return ResponseEntity.ok().body("resources deleted")
+    }
+
 
 
     // хендлер для обработки если идет попытка получить чужие данные

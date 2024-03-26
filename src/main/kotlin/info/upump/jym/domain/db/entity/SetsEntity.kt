@@ -10,6 +10,7 @@ data class SetsEntity(
         @Id
         @GeneratedValue(strategy = GenerationType.SEQUENCE)
         var id: Long=0,
+
         var comment: String? = "",
 
         var weight: Double? = 0.0,

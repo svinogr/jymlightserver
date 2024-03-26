@@ -1,0 +1,27 @@
+### получить по id
+GET localhost:8080/api/sets/10000
+
+### создать новый sets
+POST http://localhost:8080/api/sets
+Content-Type: application/json
+
+[
+  {
+    "weight": "100",
+    "reps": 10,
+    "weightPast": "0",
+    "parentId": "425"
+  },
+  {
+    "weight": "100",
+    "reps": 10,
+    "weightPast": "0",
+    "parentId": "425"
+  },
+  {
+    "weight": "100",
+    "reps": 10,
+    "weightPast": "0",
+    "parentId": "425"
+  }
+]

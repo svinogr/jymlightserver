@@ -60,13 +60,22 @@ class WorkoutService : WorkoutServiceInterface {
     }
 
     @Transactional
-    fun delete(workoutId: Long) {
-        isIdInDB(workoutId)
-
-        isUserOwnerOf(workoutId)
-
-        workoutRepo.deleteById(workoutId)
+    fun deleteById(workoutId: Long) {
+        //  isUserOwnerOf(workoutId)
+        workoutRepo.findById(workoutId).ifPresentOrElse({
+            workoutRepo.deleteById(workoutId)
+            exerciseService.deleteByParentId(workoutId)
+        }, { throw NotHaveObjectInDB() })
     }
+
+    @Transactional
+    override fun clean(id: Long) {
+        val workoutDb = workoutRepo.findById(id)
+        workoutDb.ifPresentOrElse({
+            exerciseService.deleteByParentId(id)
+        }, { throw NotHaveObjectInDB() })
+    }
+
 
     override fun isIdInDB(id: Long): Workout {
         val prep = workoutRepo.findById(id)
@@ -83,4 +92,13 @@ class WorkoutService : WorkoutServiceInterface {
         // NotOwnUserException
         //   throw NotOwnUserException()
     }
+
+    fun deleteByParentId(id: Long) {
+        workoutRepo.findByParentId(id).ifPresent() {
+            it.forEach() { w ->
+                deleteById(w.id)
+            }
+        }
+    }
+
 }

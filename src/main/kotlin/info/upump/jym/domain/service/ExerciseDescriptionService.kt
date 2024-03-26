@@ -38,9 +38,12 @@ class ExerciseDescriptionService : ExerciseDescriptionInterface {
 
     @Transactional
     fun delete(exerciseDescriptionId: Long) {
-        isIdInDB(exerciseDescriptionId)
 
         isUserOwnerOf(exerciseDescriptionId)
+        exerciseDescriptionRepo.findById(exerciseDescriptionId).ifPresentOrElse({
+
+
+        },{})
 
         exerciseDescriptionRepo.deleteById(exerciseDescriptionId)
     }

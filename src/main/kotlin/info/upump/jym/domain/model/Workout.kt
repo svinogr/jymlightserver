@@ -30,7 +30,7 @@ data class Workout(
             workout.title = workoutEntity.title
             workout.parentId = workoutEntity.parent_id!!
             workout.id = workoutEntity.id
-            workout.comment = workoutEntity.comment!!
+            workout.comment = workoutEntity.comment?: ""
             workout.setStartDate(workoutEntity.start_date)
             workout.setFinishDate(workoutEntity.finish_date)
 

@@ -38,33 +38,34 @@ class CycleService : ServiceCycleInterface {
     }
 
     override fun getById(id: Long): Cycle {
-        val cycle = cycleRepo.findById(id).map { Cycle.mapFromDbEntity(it) }.orElse(Cycle())
-       // isUserOwnerOf(cycle.id)
+        // isUserOwnerOf(cycle.id)
 
-        return cycle
+        return cycleRepo.findById(id).map { Cycle.mapFromDbEntity(it) }.orElse(Cycle())
     }
 
     @Transactional
     override fun save(model: Cycle): Cycle {
         isUserOwnerOf(model.id)  // проверить и убрать
 
-        return  Cycle.mapFromDbEntity(cycleRepo.save(Cycle.mapToEntity(model)))
-    }
-
-    fun change(cycle: Cycle): Cycle {
-        val cycleDb = cycleRepo.findById(cycle.id)
-        cycleDb.orElseThrow { NotHaveObjectInDB() }.title = cycle.title
-
-        return cycle
+        return Cycle.mapFromDbEntity(cycleRepo.save(Cycle.mapToEntity(model)))
     }
 
     @Transactional
-    override fun delete(id: Long) {
+    override fun deleteById(id: Long) {
         val cycleDb = cycleRepo.findById(id)
-        cycleDb.ifPresentOrElse({cycleRepo.deleteById(id)}, {throw NotHaveObjectInDB()})
+        cycleDb.ifPresentOrElse({
+            cycleRepo.deleteById(id)
+            workoutService.deleteByParentId(id)
+        }, { throw NotHaveObjectInDB() })
+        //  isUserOwnerOf(cycle.id)
+    }
 
-      //  isUserOwnerOf(cycle.id)
-
+    @Transactional
+    fun clean(id: Long) {
+        val cycleDb = cycleRepo.findById(id)
+        cycleDb.ifPresentOrElse({
+            workoutService.deleteByParentId(id)
+        }, { throw NotHaveObjectInDB() })
     }
 
     override fun isIdInDB(id: Long): Cycle {
@@ -81,4 +82,5 @@ class CycleService : ServiceCycleInterface {
         // NotOwnUserException
         //   throw NotOwnUserException()
     }
+
 }

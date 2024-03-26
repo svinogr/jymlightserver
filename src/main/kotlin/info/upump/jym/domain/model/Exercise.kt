@@ -23,8 +23,8 @@ data class Exercise(
                 ", id=" + id +
                 ", title='" + title + '\'' +
                 ", comment='" + comment + '\'' +
-                ", parentId=" + parentId + "descr" + exerciseDescription.toString()
-        '}'
+                ", parentId=" + parentId + "descr" + exerciseDescription.toString()+
+        "}"
     }
 
     companion object {

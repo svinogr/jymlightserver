@@ -70,10 +70,18 @@ class CycleUserController {
 
     @DeleteMapping("{cycleId}")
     fun delete(@PathVariable cycleId: Long): ResponseEntity<Void> {
-        cycleService.delete(cycleId)
+        cycleService.deleteById(cycleId)
 
         return ResponseEntity.ok().build()
     }
+
+    @DeleteMapping("clean/{cycleId}")
+    fun clean(@PathVariable cycleId: Long): ResponseEntity<Void>{
+        cycleService.clean(cycleId)
+
+        return ResponseEntity.ok().build()
+    }
+
 
 
     // хендлер для обработки если идет попытка получить чужие данные

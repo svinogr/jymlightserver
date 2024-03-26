@@ -36,12 +36,42 @@ class ExerciseService : ExerciseServiceInterface {
 
     @Transactional
     fun getFullById(id: Long): Exercise {
-        val exercise =  Exercise.mapFromDbEntity(exerciseRepo.findById(id).orElseThrow { NotHaveObjectInDB() })
+        val exercise = Exercise.mapFromDbEntity(exerciseRepo.findById(id).orElseThrow { NotHaveObjectInDB() })
         val listsets = setsService.getAllByParentId(exercise.id)
         val exerciseDescription = exerciseDescriptionService.getById(exercise.descriptionId)
         exercise.setsList.addAll(listsets)
         exercise.exerciseDescription = exerciseDescription
 
         return exercise
+    }
+
+    @Transactional
+    fun deleteById(id: Long) {
+        exerciseRepo.findById(id).ifPresentOrElse({
+           exerciseRepo.deleteById(id)
+          // exerciseDescriptionService.delete(id)
+           setsService.deleteByParentId(id)
+        }, { throw NotHaveObjectInDB() })
+
+    }
+
+    @Transactional
+    fun deleteByParentId(parentId: Long) {
+        exerciseRepo.findByParentId(parentId).ifPresentOrElse({ exercises ->
+            exercises.forEach {
+                if (it.default_type != 1 && it.template != 1) {
+                    deleteById(it.id)
+                    setsService.deleteByParentId(it.id)
+                }
+            }
+        }, {throw NotHaveObjectInDB()})
+    }
+
+    @Transactional
+    fun clean(id: Long){
+        val exerciseDb  = exerciseRepo.findById(id)
+        exerciseDb.ifPresentOrElse({
+           setsService.deleteByParentId(it.id)
+        },{throw NotHaveObjectInDB()})
     }
 }

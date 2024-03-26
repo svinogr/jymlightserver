@@ -4,4 +4,5 @@ import info.upump.jym.domain.model.Workout
 
 interface WorkoutServiceInterface : CheckableInterface<Workout> {
     fun getAllFullByParentId(id: Long): List<Workout>
+    fun clean(parentId: Long)
 }

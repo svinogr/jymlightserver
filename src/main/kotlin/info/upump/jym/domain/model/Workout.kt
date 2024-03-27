@@ -1,7 +1,7 @@
 package info.upump.jym.domain.model
 
 import info.upump.jym.domain.db.entity.WorkoutEntity
-import info.upump.jymlight.models.entity.Exercise
+import info.upump.jymlight.model.Exercise
 import java.util.*
 import kotlin.collections.ArrayList
 

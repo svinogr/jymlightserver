@@ -3,7 +3,7 @@ package info.upump.jym.domain.controllers
 import info.upump.jym.domain.exception.NotHaveObjectInDB
 import info.upump.jym.domain.exception.NotOwnUserException
 import info.upump.jym.domain.service.ExerciseDescriptionService
-import info.upump.jymlight.models.entity.ExerciseDescription
+import info.upump.jymlight.model.ExerciseDescription
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity

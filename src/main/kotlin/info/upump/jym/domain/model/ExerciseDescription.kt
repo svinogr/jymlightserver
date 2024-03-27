@@ -1,4 +1,4 @@
-package info.upump.jymlight.models.entity
+package info.upump.jymlight.model
 
 import info.upump.jym.domain.db.entity.ExerciseDescriptionEntity
 import info.upump.jym.domain.db.entity.SetsEntity

@@ -4,9 +4,9 @@ package info.upump.jym.domain.controllers
 import info.upump.jym.domain.db.repo.*
 import info.upump.jym.domain.model.Cycle
 import info.upump.jym.domain.model.Workout
-import info.upump.jymlight.models.entity.Exercise
-import info.upump.jymlight.models.entity.ExerciseDescription
-import info.upump.jymlight.models.entity.Sets
+import info.upump.jymlight.model.Exercise
+import info.upump.jymlight.model.ExerciseDescription
+import info.upump.jymlight.model.Sets
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping

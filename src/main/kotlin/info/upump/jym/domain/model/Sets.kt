@@ -1,5 +1,4 @@
-package info.upump.jymlight.models.entity
-
+package info.upump.jymlight.model
 import info.upump.jym.domain.db.entity.SetsEntity
 import info.upump.jym.domain.model.BaseModel
 
@@ -36,6 +35,7 @@ data class Sets(
         fun mapToEntity(newSets: Sets): SetsEntity {
             val sets = SetsEntity(
                     id = newSets.id)
+            print(newSets.parentId)
             sets.parent_id = newSets.parentId
             sets.weight = newSets.weight
             sets.reps = newSets.reps

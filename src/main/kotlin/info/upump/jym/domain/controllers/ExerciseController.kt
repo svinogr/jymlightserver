@@ -3,7 +3,7 @@ package info.upump.jym.domain.controllers
 import info.upump.jym.domain.exception.NotHaveObjectInDB
 import info.upump.jym.domain.exception.NotOwnUserException
 import info.upump.jym.domain.service.ExerciseService
-import info.upump.jymlight.models.entity.Exercise
+import info.upump.jymlight.model.Exercise
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -19,6 +19,12 @@ class ExerciseController {
     @GetMapping("{id}")
     fun getExerciseById(@PathVariable("id") id: Long): ResponseEntity<Exercise> {
         return ResponseEntity.ok(exerciseService.getFullById(id))
+    }
+
+    @DeleteMapping("{id}/clean")
+    fun cleanById(@PathVariable("id") id: Long): ResponseEntity<String> {
+        exerciseService.clean(id)
+        return ResponseEntity.ok().body("resources deleted")
     }
 
     // хендлер для обработки если идет попытка получить чужие данные

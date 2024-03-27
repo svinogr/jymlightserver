@@ -4,8 +4,8 @@ import info.upump.jym.domain.db.entity.ExerciseDescriptionEntity
 import info.upump.jym.domain.db.repo.ExerciseDescriptionRepo
 import info.upump.jym.domain.exception.NotHaveObjectInDB
 import info.upump.jym.domain.service.interfaces.ExerciseDescriptionInterface
-import info.upump.jymlight.models.entity.ExerciseDescription
-import info.upump.jymlight.models.entity.Sets
+import info.upump.jymlight.model.ExerciseDescription
+import info.upump.jymlight.model.Sets
 import jakarta.transaction.Transactional
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service

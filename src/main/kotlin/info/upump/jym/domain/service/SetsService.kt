@@ -3,7 +3,7 @@ package info.upump.jym.domain.service
 import info.upump.jym.domain.db.repo.SetsRepo
 import info.upump.jym.domain.exception.NotHaveObjectInDB
 import info.upump.jym.domain.service.interfaces.SetsServiceInterface
-import info.upump.jymlight.models.entity.Sets
+import info.upump.jymlight.model.Sets
 import jakarta.transaction.Transactional
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service

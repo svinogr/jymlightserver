@@ -1,0 +1,11 @@
+###получить темплате
+GET http://localhost:8080/api/templates/exercise
+
+
+### копи
+POST http://localhost:8080/api/exercise/1/copy
+Content-Type: application/json
+
+{
+  "id" : "1"
+}

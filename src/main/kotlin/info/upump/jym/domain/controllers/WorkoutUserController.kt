@@ -40,8 +40,9 @@ class WorkoutUserController {
         return ResponseEntity.ok().body("resource deleted")
     }
 
-    @DeleteMapping("clean/{id}")
+    @DeleteMapping("{id}/clean")
     fun clean(@PathVariable id: Long): ResponseEntity<String>{
+        println(id)
         workoutService.clean(id)
 
         return ResponseEntity.ok().body("resources deleted")

@@ -1,5 +1,6 @@
 package info.upump.jym.domain.service
 
+import info.upump.jym.domain.db.entity.ExerciseEntity
 import info.upump.jym.domain.db.repo.ExerciseRepo
 import info.upump.jym.domain.exception.NotHaveObjectInDB
 import info.upump.jym.domain.service.interfaces.ExerciseServiceInterface
@@ -48,9 +49,9 @@ class ExerciseService : ExerciseServiceInterface {
     @Transactional
     fun deleteById(id: Long) {
         exerciseRepo.findById(id).ifPresentOrElse({
-           exerciseRepo.deleteById(id)
-          // exerciseDescriptionService.delete(id)
-           setsService.deleteByParentId(id)
+            exerciseRepo.deleteById(id)
+            // exerciseDescriptionService.delete(id)
+            setsService.deleteByParentId(id)
         }, { throw NotHaveObjectInDB() })
 
     }
@@ -59,19 +60,51 @@ class ExerciseService : ExerciseServiceInterface {
     fun deleteByParentId(parentId: Long) {
         exerciseRepo.findByParentId(parentId).ifPresentOrElse({ exercises ->
             exercises.forEach {
-                if (it.default_type != 1 && it.template != 1) {
+                if (it.template != 1) {
                     deleteById(it.id)
                     setsService.deleteByParentId(it.id)
                 }
             }
-        }, {throw NotHaveObjectInDB()})
+        }, { throw NotHaveObjectInDB() })
     }
 
     @Transactional
-    fun clean(id: Long){
-        val exerciseDb  = exerciseRepo.findById(id)
+    fun clean(id: Long) {
+        val exerciseDb = exerciseRepo.findById(id)
         exerciseDb.ifPresentOrElse({
-           setsService.deleteByParentId(it.id)
-        },{throw NotHaveObjectInDB()})
+            setsService.deleteByParentId(it.id)
+        }, { throw NotHaveObjectInDB() })
+    }
+
+    fun copy(id: Long, parentId: Long): Exercise {
+        print(parentId)
+        var exerciseNew = Exercise()
+
+        exerciseRepo.findById(id).ifPresent {
+            val copy = ExerciseEntity().apply {
+                this.id = 0
+                parent_id = parentId
+
+                comment = it.comment
+
+                description_id = it.description_id
+
+                type_exercise = it.type_exercise
+
+                default_type = 0
+
+                template = 0
+
+                start_date = it.start_date
+
+                finish_date = it.finish_date
+            }
+
+            exerciseNew = Exercise.mapFromDbEntity(exerciseRepo.save(copy))
+        }
+
+        if (exerciseNew.id == 0L) throw NotHaveObjectInDB()
+
+        return exerciseNew
     }
 }

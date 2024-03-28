@@ -75,14 +75,13 @@ class CycleUserController {
         return ResponseEntity.ok().build()
     }
 
-    @DeleteMapping("clean/{cycleId}")
+    @DeleteMapping("{cycleId}/clean")
     fun clean(@PathVariable cycleId: Long): ResponseEntity<Void>{
+        print(cycleId)
         cycleService.clean(cycleId)
 
         return ResponseEntity.ok().build()
     }
-
-
 
     // хендлер для обработки если идет попытка получить чужие данные
     @ExceptionHandler(NotOwnUserException::class)
